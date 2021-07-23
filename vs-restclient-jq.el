@@ -51,14 +51,13 @@
 
 (defun vs-restclient-jq-json-var-function (args args-offset)
   (save-match-data
-    (and (string-match "\\(@[^: \n]+\\) \\(.*\\)$" args)
-         (lexical-let ((var-name (match-string 1 args))
-                       (jq-patt (match-string 2 args)))
-                      (lambda ()
-                        (let ((resp-val (vs-restclient-jq-get-var jq-patt)))
-                          (vs-restclient-remove-var var-name)
-                          (vs-restclient-set-var var-name resp-val)
-                          (message "vs-restclient var [%s = \"%s\"] " var-name resp-val)))))))
+    (and (string-match "@\\([^: \n]+\\) \\(.*\\)$" args)
+         (let ((var-name (concat "{{" (match-string 1 args) "}}"))
+               (jq-patt (match-string 2 args)))
+           (progn
+             (let ((resp-val (vs-restclient-jq-get-var jq-patt)))
+               (vs-restclient-set-var var-name resp-val)
+               (message "vs-restclient var [%s = \"%s\"] " var-name resp-val)))))))
 
 (defun vs-restclient-jq-interactive-result ()
   (interactive)
