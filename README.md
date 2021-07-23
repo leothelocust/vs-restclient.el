@@ -1,4 +1,35 @@
-# restclient.el
+# vs-restclient.el
+
+A fork of the great [restclient.el](https://github.com/pashky/restclient.el) package.
+
+The sole purpose of this fork is to be _generally_ compatible with the popular HTTP/REST VS Code extensions such as:
+
+  * https://github.com/Huachao/vscode-restclient
+  * https://github.com/AnWeber/vscode-httpyac
+
+Essentially the syntax changes from:
+```http
+:api = http://localhost/api
+GET :api/users
+```
+To this:
+```http
+@api = http://localhost/api
+GET {{api}}/users
+```
+
+## Known Issues
+
+  * Ideally this fork would allow for both syntaxes to work, however, only the updated syntax is supported.
+    * **Workaround**
+      1. Install both this package and the original restclient
+      2. Switch between them as needed
+         * `M-x: vs-restclient-mode` for compatible mode
+         * `M-x: restclient-mode` when needing the original syntax
+  
+<br><br><br><br><br><br>
+
+# Original README from restclient.el
 
 This is a tool to manually explore and test HTTP REST webservices.
 Runs queries from a plain-text query sheet,
