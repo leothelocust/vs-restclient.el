@@ -28,8 +28,8 @@
   (save-excursion
     (goto-char (point-max))
     (or (and (re-search-backward "^[^/].*" nil t)
-	     (line-end-position))
-	(point-max))))
+             (line-end-position))
+        (point-max))))
 
 (defun vs-restclient-jq-get-var (jq-pattern)
   (with-temp-buffer
@@ -45,28 +45,26 @@
          shell-command-switch
          (format "%s %s %s"
                  jq-interactive-command
-		 "-r"
+                 "-r"
                  (shell-quote-argument jq-pattern))))
       (string-trim (buffer-string)))))
 
 (defun vs-restclient-jq-json-var-function (args args-offset)
   (save-match-data
-   (and (string-match "\\(@[^: \n]+\\) \\(.*\\)$" args)
-	(lexical-let ((var-name (match-string 1 args))
-		      (jq-patt (match-string 2 args)))
-	  (lambda ()
-	    (let ((resp-val (vs-restclient-jq-get-var jq-patt)))
-	      (vs-restclient-remove-var var-name)
-	      (vs-restclient-set-var var-name resp-val)
-	      (message "vs-restclient var [%s = \"%s\"] " var-name resp-val)))))))
+    (and (string-match "\\(@[^: \n]+\\) \\(.*\\)$" args)
+         (lexical-let ((var-name (match-string 1 args))
+                       (jq-patt (match-string 2 args)))
+                      (lambda ()
+                        (let ((resp-val (vs-restclient-jq-get-var jq-patt)))
+                          (vs-restclient-remove-var var-name)
+                          (vs-restclient-set-var var-name resp-val)
+                          (message "vs-restclient var [%s = \"%s\"] " var-name resp-val)))))))
 
 (defun vs-restclient-jq-interactive-result ()
   (interactive)
   (flush-lines "^//.*") ;; jq doesnt like comments
   (jq-interactively (point-min) (vs-restclient-jq-result-end-point)))
 
-
-(provide 'vs-restclient-jq)
 
 ;; todo: eval-after-load should be used in configuration, not
 ;; packages. Replace with a better solution.
